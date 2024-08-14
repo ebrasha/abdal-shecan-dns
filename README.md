@@ -14,7 +14,7 @@
  ## 🛠️ پیش نیاز برای برنامه نویسان
 > .NET 7
 
-> UI.for.WinForms.AllControls.Net70
+> Telerik UI.for.WinForms.AllControls.Net70
 
 ### 🔥 پیشنیازها
 
