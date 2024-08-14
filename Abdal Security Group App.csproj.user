@@ -1,0 +1,17 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="Current" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Compile Update="abdal-shecan-dns\about_us.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="abdal-shecan-dns\Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="about_us.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="Main.cs">
+      <SubType>Form</SubType>
+    </Compile>
+  </ItemGroup>
+</Project>

@@ -1,0 +1,9 @@
+C:\Users\EbraSha\Documents\Github\Abdal Shecan DNS\bin\Release\net7.0-windows\win-x86\publish\Abdal Shecan DNS.pdb
+C:\Users\EbraSha\Documents\Github\Abdal Shecan DNS\bin\Release\net7.0-windows\win-x86\publish\D3DCompiler_47_cor3.dll
+C:\Users\EbraSha\Documents\Github\Abdal Shecan DNS\bin\Release\net7.0-windows\win-x86\publish\PenImc_cor3.dll
+C:\Users\EbraSha\Documents\Github\Abdal Shecan DNS\bin\Release\net7.0-windows\win-x86\publish\PresentationNative_cor3.dll
+C:\Users\EbraSha\Documents\Github\Abdal Shecan DNS\bin\Release\net7.0-windows\win-x86\publish\vcruntime140_cor3.dll
+C:\Users\EbraSha\Documents\Github\Abdal Shecan DNS\bin\Release\net7.0-windows\win-x86\publish\wpfgfx_cor3.dll
+C:\Users\EbraSha\Documents\Github\Abdal Shecan DNS\bin\Release\net7.0-windows\win-x86\publish\chilkatDnCore-9_5_0.dll
+C:\Users\EbraSha\Documents\Github\Abdal Shecan DNS\bin\Release\net7.0-windows\win-x86\publish\sni.dll
+C:\Users\EbraSha\Documents\Github\Abdal Shecan DNS\bin\Release\net7.0-windows\win-x86\publish\Abdal Shecan DNS.exe
