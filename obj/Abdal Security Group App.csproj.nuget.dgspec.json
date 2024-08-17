@@ -5,7 +5,7 @@
   },
   "projects": {
     "C:\\Users\\EbraSha\\Documents\\Github\\Abdal Shecan DNS\\Abdal Security Group App.csproj": {
-      "version": "1.0.0",
+      "version": "1.15.0",
       "restore": {
         "projectUniqueName": "C:\\Users\\EbraSha\\Documents\\Github\\Abdal Shecan DNS\\Abdal Security Group App.csproj",
         "projectName": "Abdal Shecan DNS",
@@ -69,6 +69,10 @@
             "Microsoft.Windows.Compatibility": {
               "target": "Package",
               "version": "[8.0.7, )"
+            },
+            "Newtonsoft.Json": {
+              "target": "Package",
+              "version": "[13.0.3, )"
             },
             "System.Runtime.Serialization.Schema": {
               "target": "Package",

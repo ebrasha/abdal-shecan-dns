@@ -46,12 +46,23 @@ namespace Abdal_Security_Group_App
 
         #endregion
 
-        private void Main_Load(object sender, EventArgs e)
+        private async void Main_Load(object sender, EventArgs e)
         {
+            TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
+            int seconds = selectedTimeSpan.Seconds;
+
+            GlobalpUpdaterTimer.Instance.Initialize(seconds * 1000, () =>
+            {
+                if (bg_IpUpdatre.IsBusy != true)
+                {
+                    bg_IpUpdatre.RunWorkerAsync();
+                }
+            });
+            GlobalpUpdaterTimer.Instance.Stop();
+
 
             if (!File.Exists(PubVar.configFilePath))
             {
-                TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
                 ShecanConfig.SaveConfig(
                     PubVar.configFilePath,
                     "no",
@@ -62,6 +73,7 @@ namespace Abdal_Security_Group_App
                 switchIPUpdater.Value = false;
                 ShecanPro.Value = false;
             }
+
             // Get Config 
             Dictionary<string, string> config = ShecanConfig.RetrieveConfig(PubVar.configFilePath);
             // ProShecan Status
@@ -76,17 +88,17 @@ namespace Abdal_Security_Group_App
 
             // IP Password Update
             UpdateIpPassword.Text = config["shecan_ip_updater_code"];
-            
+
             // Updater Time Status
             if (config["shekan_ip_updater_status"] == "yes")
             {
                 switchIPUpdater.Value = true;
-                timerIPUpdater.Enabled = true;
+                GlobalpUpdaterTimer.Instance.Start();
                 TimeSpanPickerIpU.BackColor = System.Drawing.Color.FromArgb(36, 36, 36);
             }
             else
             {
-                timerIPUpdater.Enabled = false;
+                GlobalpUpdaterTimer.Instance.Stop();
                 switchIPUpdater.Value = false;
                 TimeSpanPickerIpU.BackColor = System.Drawing.Color.Crimson;
             }
@@ -100,6 +112,7 @@ namespace Abdal_Security_Group_App
             {
                 nicList.Items.Add(adapter.Name);
             }
+            await UpdateChecker.CheckForUpdateAsync();
         }
 
         private void cmdHandelCommand(string userCommand)
@@ -125,13 +138,13 @@ namespace Abdal_Security_Group_App
                     radRichTextEditorResult.ScrollToCaret();
                 });
             }
-
         }
 
         static List<string> GetNetworkInterfaces()
         {
             var networkInterfaces = new List<string>();
-            var searcher = new ManagementObjectSearcher("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled = True");
+            var searcher =
+                new ManagementObjectSearcher("SELECT * FROM Win32_NetworkAdapterConfiguration WHERE IPEnabled = True");
 
             foreach (ManagementObject queryObj in searcher.Get())
             {
@@ -153,11 +166,6 @@ namespace Abdal_Security_Group_App
             ab_player.sPlayer("checkbox");
             Process.Start(new ProcessStartInfo("https://gitlab.com/Prof.Shafiei/" + abdal_app_name_for_url)
             { UseShellExecute = true });
-        }
-
-        private void menuItem_donate_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void menuItem_about_us_Click(object sender, EventArgs e)
@@ -228,8 +236,9 @@ namespace Abdal_Security_Group_App
             TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
             int seconds = selectedTimeSpan.Seconds;
 
-            timerIPUpdater.Enabled = true;
-            timerIPUpdater.Interval = seconds * 1000;
+            // UpdateTimer
+            GlobalpUpdaterTimer.Instance.UpdateInterval(seconds * 1000);
+            GlobalpUpdaterTimer.Instance.Start();
 
             ShecanConfig.SaveConfig(
                 PubVar.configFilePath,
@@ -244,12 +253,12 @@ namespace Abdal_Security_Group_App
             foreach (NetworkInterface adapter in interfaces_f1)
             {
                 cmdHandelCommand($"netsh interface ipv4 set dnsservers    \"{adapter.Name}\"  dhcp");
-
             }
 
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." + Environment.NewLine);
+                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
@@ -263,12 +272,15 @@ namespace Abdal_Security_Group_App
                 radRichTextEditorResult.ScrollToCaret();
             });
             // Clean Route
-            cmdHandelCommand("for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv4 sh route store^=persistent ^| findstr -v 0.0.0.0/0') do route delete -4 -p %e %f");
-            cmdHandelCommand("for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv6 sh route store^=persistent ^| findstr -v ::/0') do route delete -6 -p %e %f");
+            cmdHandelCommand(
+                "for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv4 sh route store^=persistent ^| findstr -v 0.0.0.0/0') do route delete -4 -p %e %f");
+            cmdHandelCommand(
+                "for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv6 sh route store^=persistent ^| findstr -v ::/0') do route delete -6 -p %e %f");
 
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("کش روت های سیستم شما حذف شد تا شکن بدون اختلال کار کند" + Environment.NewLine);
+                radRichTextEditorResult.AppendText("کش روت های سیستم شما حذف شد تا شکن بدون اختلال کار کند" +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
@@ -281,32 +293,41 @@ namespace Abdal_Security_Group_App
                     NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
                     foreach (NetworkInterface adapter in interfaces)
                     {
-                        cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=178.22.122.101  index=1");
-                        cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=185.51.200.1  index=2");
+                        cmdHandelCommand(
+                            $"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=178.22.122.101  index=1");
+                        cmdHandelCommand(
+                            $"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=185.51.200.1  index=2");
                     }
+
                     radRichTextEditorResult.Invoke((MethodInvoker)delegate
                     {
-                        radRichTextEditorResult.AppendText("دی ان اس های شکن حرفه ای روی تمامی کارت شبکه های شما ست شد" + Environment.NewLine);
+                        radRichTextEditorResult.AppendText(
+                            "دی ان اس های شکن حرفه ای روی تمامی کارت شبکه های شما ست شد" + Environment.NewLine);
                         radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                         radRichTextEditorResult.ScrollToCaret();
                     });
                 }
                 else
                 {
-                    cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{nicList.Text}\"  address=178.22.122.101 index=1");
-                    cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{nicList.Text}\"  address=185.51.200.1 index=2");
+                    cmdHandelCommand(
+                        $"netsh interface ipv4 add dnsservers    \"{nicList.Text}\"  address=178.22.122.101 index=1");
+                    cmdHandelCommand(
+                        $"netsh interface ipv4 add dnsservers    \"{nicList.Text}\"  address=185.51.200.1 index=2");
 
                     radRichTextEditorResult.Invoke((MethodInvoker)delegate
                     {
-                        radRichTextEditorResult.AppendText("دی ان اس شکن حرفه ای روی کارت شبکه مورد نظر ست شد" + Environment.NewLine);
+                        radRichTextEditorResult.AppendText("دی ان اس شکن حرفه ای روی کارت شبکه مورد نظر ست شد" +
+                                                           Environment.NewLine);
                         radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                         radRichTextEditorResult.ScrollToCaret();
                     });
                 }
 
-                timerIPUpdater.Enabled = true;
+
                 switchIPUpdater.Value = true;
-                timerIPUpdater.Start();
+
+
+                GlobalpUpdaterTimer.Instance.Start();
             }
             else
             {
@@ -316,12 +337,15 @@ namespace Abdal_Security_Group_App
                     NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
                     foreach (NetworkInterface adapter in interfaces)
                     {
-                        cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"   address=178.22.122.100  index=1");
-                        cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=185.51.200.2  index=2");
+                        cmdHandelCommand(
+                            $"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"   address=178.22.122.100  index=1");
+                        cmdHandelCommand(
+                            $"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=185.51.200.2  index=2");
 
                         radRichTextEditorResult.Invoke((MethodInvoker)delegate
                         {
-                            radRichTextEditorResult.AppendText("دی ان اس های شکن رایگان روی تمامی کارت شبکه های شما ست شد" + Environment.NewLine);
+                            radRichTextEditorResult.AppendText(
+                                "دی ان اس های شکن رایگان روی تمامی کارت شبکه های شما ست شد" + Environment.NewLine);
                             radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                             radRichTextEditorResult.ScrollToCaret();
                         });
@@ -329,92 +353,78 @@ namespace Abdal_Security_Group_App
                 }
                 else
                 {
-                    cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{nicList.Text}\"   address=178.22.122.100 index=1");
-                    cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{nicList.Text}\"  address=185.51.200.2 index=2");
+                    cmdHandelCommand(
+                        $"netsh interface ipv4 add dnsservers    \"{nicList.Text}\"   address=178.22.122.100 index=1");
+                    cmdHandelCommand(
+                        $"netsh interface ipv4 add dnsservers    \"{nicList.Text}\"  address=185.51.200.2 index=2");
 
                     radRichTextEditorResult.Invoke((MethodInvoker)delegate
                     {
-                        radRichTextEditorResult.AppendText("دی ان اس شکن رایگان روی کارت شبکه مورد نظر ست شد" + Environment.NewLine);
+                        radRichTextEditorResult.AppendText("دی ان اس شکن رایگان روی کارت شبکه مورد نظر ست شد" +
+                                                           Environment.NewLine);
                         radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                         radRichTextEditorResult.ScrollToCaret();
                     });
-
                 }
-                timerIPUpdater.Enabled = false;
+
+                GlobalpUpdaterTimer.Instance.Stop();
                 switchIPUpdater.Value = false;
-
             }
-
-
-        }
-
-
-
-        private void timerIPUpdater_Tick(object sender, EventArgs e)
-        {
-            // Get Config 
-            Dictionary<string, string> config = ShecanConfig.RetrieveConfig(PubVar.configFilePath);
-            if (config["shekan_ip_updater_status"] == "yes")
-            {
-                if (bg_IpUpdatre.IsBusy != true)
-                {
-                    bg_IpUpdatre.RunWorkerAsync();
-                }
-            }
-           
         }
 
         private void bg_IpUpdatre_DoWork(object sender, DoWorkEventArgs e)
         {
-            string url = "https://ddns.shecan.ir/update?password=" + UpdateIpPassword.Text;
-
-            using (HttpClient client = new HttpClient())
+            if (ShecanPro.Value)
             {
-                client.Timeout = TimeSpan.FromSeconds(30); // Set the timeout before sending the request
+                #region ShecanProHTTPClient
 
-                // Add User-Agent header
-                Version version = Assembly.GetExecutingAssembly().GetName().Version!;
-                string user_agent = abdal_app_name + " " + version.Major + "." + version.Minor;
-                client.DefaultRequestHeaders.UserAgent.ParseAdd(user_agent);
+                string url = "https://ddns.shecan.ir/update?password=" + UpdateIpPassword.Text;
 
-                try
+                using (HttpClient client = new HttpClient())
                 {
-                    HttpResponseMessage response = client.GetAsync(url).Result;
-                    response.EnsureSuccessStatusCode();
-                    ip_update_status = response.Content.ReadAsStringAsync().Result;
+                    client.Timeout = TimeSpan.FromSeconds(30); // Set the timeout before sending the request
 
+                    // Add User-Agent header
+                    Version version = Assembly.GetExecutingAssembly().GetName().Version!;
+                    string user_agent = abdal_app_name + " " + version.Major + "." + version.Minor;
+                    client.DefaultRequestHeaders.UserAgent.ParseAdd(user_agent);
 
-
+                    try
+                    {
+                        HttpResponseMessage response = client.GetAsync(url).Result;
+                        response.EnsureSuccessStatusCode();
+                        ip_update_status = response.Content.ReadAsStringAsync().Result;
+                    }
+                    catch (Exception ex)
+                    {
+                        ip_update_status = "invalid";
+                    }
                 }
-                catch (Exception ex)
+
+
+                if (ip_update_status == "invalid" || string.IsNullOrEmpty(ip_update_status))
                 {
-
-                    ip_update_status = "invalid";
-
-
+                    radRichTextEditorResult.Invoke((MethodInvoker)delegate
+                    {
+                        radRichTextEditorResult.AppendText("متأسفانه آی پی شما به شکن اعلام نشد" + Environment.NewLine);
+                        radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
+                        radRichTextEditorResult.ScrollToCaret();
+                    });
                 }
-            }
-
-
-            if (ip_update_status == "invalid" || string.IsNullOrEmpty(ip_update_status))
-            {
-                radRichTextEditorResult.Invoke((MethodInvoker)delegate
+                else
                 {
-                    radRichTextEditorResult.AppendText("متأسفانه آی پی شما به شکن اعلام نشد" + Environment.NewLine);
-                    radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
-                    radRichTextEditorResult.ScrollToCaret();
-                });
-            }
-            else
-            {
-                radRichTextEditorResult.Invoke((MethodInvoker)delegate
-                {
-                    radRichTextEditorResult.AppendText(" آی پی شما به شکن اعلام شد " + DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + " " + Environment.NewLine);
-                    radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
-                    radRichTextEditorResult.ScrollToCaret();
-                });
-            }
+                    radRichTextEditorResult.Invoke((MethodInvoker)delegate
+                    {
+                        radRichTextEditorResult.AppendText(" آی پی شما به شکن اعلام شد " +
+                                                           DateTime.Now.ToString("yyyy/MM/dd HH:mm:ss") + " " +
+                                                           Environment.NewLine);
+                        radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
+                        radRichTextEditorResult.ScrollToCaret();
+                    });
+                }
 
+                #endregion
+            }
         }
 
         private void ShowDeskAlert(string message, string sound)
@@ -427,116 +437,156 @@ namespace Abdal_Security_Group_App
 
         private void bg_IpUpdatre_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
         {
-            if (ShecanPro.Value)
+            try
             {
-                if (ip_update_status == "invalid" || string.IsNullOrEmpty(ip_update_status))
+                if (ShecanPro.Value)
                 {
-                    textUpdaterCodeStatus.Text = "وضعیت کد : نامعتبر";
-                    textUpdaterCodeStatus.ForeColor = System.Drawing.Color.Crimson;
+                    if (ip_update_status == "invalid" || string.IsNullOrEmpty(ip_update_status))
+                    {
+                        textUpdaterCodeStatus.Text = "وضعیت کد : نامعتبر";
+                        textUpdaterCodeStatus.ForeColor = System.Drawing.Color.Crimson;
+                    }
+                    else
+                    {
+                        textUpdaterCodeStatus.Text = "وضعیت کد : معتبر";
+                        textUpdaterCodeStatus.ForeColor = System.Drawing.Color.SpringGreen;
+                    }
                 }
-                else
-                {
-                    textUpdaterCodeStatus.Text = "وضعیت کد : معتبر";
-                    textUpdaterCodeStatus.ForeColor = System.Drawing.Color.SpringGreen;
-                }
+            }
+            catch (Exception ex)
+            {
+
+              // Do nothing
             }
         }
 
-
-
+        public int GetIntervalFromForm()
+        {
+            TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
+            int totalSeconds = (int)selectedTimeSpan.TotalSeconds;
+            return totalSeconds;
+        }
         private void IPUpdaterSwitch_ValueChanged(object sender, EventArgs e)
         {
-            if (switchIPUpdater.Value)
+            try
             {
-                ab_player.sPlayerSync("checkbox");
-                timerIPUpdater.Enabled = true;
-                TimeSpanPickerIpU.BackColor = System.Drawing.Color.FromArgb(36, 36, 36);
+                if (switchIPUpdater.Value)
+                {
+                    ab_player.sPlayerSync("checkbox");
+
+                    TimeSpanPickerIpU.BackColor = System.Drawing.Color.FromArgb(36, 36, 36);
+
+                    if (ShecanPro.Value == true)
+                    {
+                     
+
+                        if (!GlobalpUpdaterTimer.Instance.IsRunning)
+                        {
+                            GlobalpUpdaterTimer.Instance.Start();
+                        }
+                    }
+                    else
+                    {
+                        GlobalpUpdaterTimer.Instance.Stop();
+                    }
+
+                   
+                }
+                else
+                {
+                    ab_player.sPlayerSync("checkbox");
+                    TimeSpanPickerIpU.BackColor = System.Drawing.Color.Crimson;
+                   
+                    GlobalpUpdaterTimer.Instance.Stop();
+
+                }
+
+                // Save To config file
+                TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
+                int seconds = selectedTimeSpan.Seconds;
+
+
+                
+
+                ShecanConfig.SaveConfig(
+                    PubVar.configFilePath,
+                    (ShecanPro.Value) ? "yes" : "no",
+                    UpdateIpPassword.Text,
+                    (switchIPUpdater.Value) ? "yes" : "no",
+                    selectedTimeSpan.ToString()
+                );
             }
-            else
+            catch (Exception)
             {
-                ab_player.sPlayerSync("checkbox");
-                timerIPUpdater.Enabled = false;
-                switchIPUpdater.Value = false;
-                TimeSpanPickerIpU.BackColor = System.Drawing.Color.Crimson;
+                //Do nothing.
             }
-
-            // Save To config file
-
-            TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
-            int seconds = selectedTimeSpan.Seconds;
-
-            timerIPUpdater.Enabled = true;
-            timerIPUpdater.Interval = seconds * 1000;
-
-            ShecanConfig.SaveConfig(
-                PubVar.configFilePath,
-                (ShecanPro.Value) ? "yes" : "no",
-                UpdateIpPassword.Text,
-                (switchIPUpdater.Value) ? "yes" : "no",
-                selectedTimeSpan.ToString()
-            );
-
         }
 
         private void ShecanPro_ValueChanged(object sender, EventArgs e)
         {
-            if (ShecanPro.Value)
+            try
             {
-                ab_player.sPlayerSync("checkbox");
-                textUpdaterCodeStatus.Text = "وضعیت کد : نامشخص";
-                textUpdaterCodeStatus.ForeColor = System.Drawing.Color.FromArgb(221, 221, 221);
+                if (ShecanPro.Value)
+                {
+                    ab_player.sPlayerSync("checkbox");
+                    textUpdaterCodeStatus.Text = "وضعیت کد : نامشخص";
+                    textUpdaterCodeStatus.ForeColor = System.Drawing.Color.FromArgb(221, 221, 221);
 
-                switchIPUpdater.Enabled = true;
-                timerIPUpdater.Enabled = true;
-                TimeSpanPickerIpU.Enabled = true;
-                TimeSpanPickerIpU.BackColor = System.Drawing.Color.FromArgb(36, 36, 36);
+                    switchIPUpdater.Enabled = true;
 
+                    GlobalpUpdaterTimer.Instance.Start();
+                    TimeSpanPickerIpU.Enabled = true;
+                    TimeSpanPickerIpU.BackColor = System.Drawing.Color.FromArgb(36, 36, 36);
+                }
+                else
+                {
+                    ab_player.sPlayerSync("checkbox");
+                    textUpdaterCodeStatus.Text = "وضعیت کد : نامشخص";
+                    textUpdaterCodeStatus.ForeColor = System.Drawing.Color.FromArgb(221, 221, 221);
+
+                    switchIPUpdater.Enabled = false;
+                    GlobalpUpdaterTimer.Instance.Stop();
+                    TimeSpanPickerIpU.Enabled = false;
+                    TimeSpanPickerIpU.BackColor = System.Drawing.Color.Crimson;
+                }
+
+                // Save To config file
+
+                TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
+                int seconds = selectedTimeSpan.Seconds;
+                GlobalpUpdaterTimer.Instance.UpdateInterval(seconds * 1000);
+                GlobalpUpdaterTimer.Instance.Start();
+
+
+                ShecanConfig.SaveConfig(
+                    PubVar.configFilePath,
+                    (ShecanPro.Value) ? "yes" : "no",
+                    UpdateIpPassword.Text,
+                    (switchIPUpdater.Value) ? "yes" : "no",
+                    selectedTimeSpan.ToString()
+                );
             }
-            else
+            catch (Exception)
             {
-                ab_player.sPlayerSync("checkbox");
-                textUpdaterCodeStatus.Text = "وضعیت کد : نامشخص";
-                textUpdaterCodeStatus.ForeColor = System.Drawing.Color.FromArgb(221, 221, 221);
-
-                switchIPUpdater.Enabled = false;
-                timerIPUpdater.Enabled = false;
-                TimeSpanPickerIpU.Enabled = false;
-                TimeSpanPickerIpU.BackColor = System.Drawing.Color.Crimson;
+                //Do nothing.
             }
-
-            // Save To config file
-
-            TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
-            int seconds = selectedTimeSpan.Seconds;
-
-            timerIPUpdater.Enabled = true;
-            timerIPUpdater.Interval = seconds * 1000;
-
-            ShecanConfig.SaveConfig(
-                PubVar.configFilePath,
-                (ShecanPro.Value) ? "yes" : "no",
-                UpdateIpPassword.Text,
-                (switchIPUpdater.Value) ? "yes" : "no",
-                selectedTimeSpan.ToString()
-            );
         }
 
         private void bg_auto_dns_DoWork(object sender, DoWorkEventArgs e)
         {
-            timerIPUpdater.Enabled = false;
             switchIPUpdater.Value = false;
-            timerIPUpdater.Stop();
+            GlobalpUpdaterTimer.Instance.Stop();
             // DHCP
             NetworkInterface[] interfaces_f1 = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in interfaces_f1)
             {
                 cmdHandelCommand($"netsh interface ipv4 set dnsservers    \"{adapter.Name}\"  dhcp");
-
             }
 
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." + Environment.NewLine);
+                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
@@ -551,32 +601,33 @@ namespace Abdal_Security_Group_App
                 radRichTextEditorResult.ScrollToCaret();
             });
             // Clean Route
-            cmdHandelCommand("for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv4 sh route store^=persistent ^| findstr -v 0.0.0.0/0') do route delete -4 -p %e %f");
-            cmdHandelCommand("for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv6 sh route store^=persistent ^| findstr -v ::/0') do route delete -6 -p %e %f");
+            cmdHandelCommand(
+                "for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv4 sh route store^=persistent ^| findstr -v 0.0.0.0/0') do route delete -4 -p %e %f");
+            cmdHandelCommand(
+                "for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv6 sh route store^=persistent ^| findstr -v ::/0') do route delete -6 -p %e %f");
 
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("کش روت های سیستم شما حذف شد تا شکن بدون اختلال کار کند" + Environment.NewLine);
+                radRichTextEditorResult.AppendText("کش روت های سیستم شما حذف شد تا شکن بدون اختلال کار کند" +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
-
 
 
             NetworkInterface[] interfaces = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in interfaces)
             {
                 cmdHandelCommand($"netsh interface ipv4 set dnsservers    \"{adapter.Name}\"  dhcp");
-
             }
 
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." + Environment.NewLine);
+                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
-           
         }
 
         private void btn_set_dhcp_Click(object sender, EventArgs e)
@@ -587,27 +638,22 @@ namespace Abdal_Security_Group_App
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void bgw_cloudflare_DoWork(object sender, DoWorkEventArgs e)
         {
-            timerIPUpdater.Enabled = false;
             switchIPUpdater.Value = false;
-            timerIPUpdater.Stop();
+            GlobalpUpdaterTimer.Instance.Stop();
+
             // DHCP
             NetworkInterface[] interfaces_f1 = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in interfaces_f1)
             {
                 cmdHandelCommand($"netsh interface ipv4 set dnsservers    \"{adapter.Name}\"  dhcp");
-
             }
 
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." + Environment.NewLine);
+                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
@@ -622,12 +668,15 @@ namespace Abdal_Security_Group_App
                 radRichTextEditorResult.ScrollToCaret();
             });
             // Clean Route
-            cmdHandelCommand("for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv4 sh route store^=persistent ^| findstr -v 0.0.0.0/0') do route delete -4 -p %e %f");
-            cmdHandelCommand("for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv6 sh route store^=persistent ^| findstr -v ::/0') do route delete -6 -p %e %f");
+            cmdHandelCommand(
+                "for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv4 sh route store^=persistent ^| findstr -v 0.0.0.0/0') do route delete -4 -p %e %f");
+            cmdHandelCommand(
+                "for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv6 sh route store^=persistent ^| findstr -v ::/0') do route delete -6 -p %e %f");
 
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("کش روت های سیستم شما حذف شد تا شکن بدون اختلال کار کند" + Environment.NewLine);
+                radRichTextEditorResult.AppendText("کش روت های سیستم شما حذف شد تا شکن بدون اختلال کار کند" +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
@@ -637,16 +686,19 @@ namespace Abdal_Security_Group_App
             NetworkInterface[] interfaces_cf = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in interfaces_cf)
             {
-                cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=1.1.1.1   index=1");
-                cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=1.0.0.1   index=2");
+                cmdHandelCommand(
+                    $"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=1.1.1.1   index=1");
+                cmdHandelCommand(
+                    $"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=1.0.0.1   index=2");
             }
+
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("دی ان اس های کلودفلیر روی تمامی کارت شبکه های شما ست شد" + Environment.NewLine);
+                radRichTextEditorResult.AppendText("دی ان اس های کلودفلیر روی تمامی کارت شبکه های شما ست شد" +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
-
         }
 
         private void tb_cf_g_dns_Click(object sender, EventArgs e)
@@ -659,11 +711,23 @@ namespace Abdal_Security_Group_App
 
         private void TimeSpanPickerIpU_ValueChanged(object sender, EventArgs e)
         {
-            TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
-            int seconds = selectedTimeSpan.Seconds;
-
-            timerIPUpdater.Enabled = true;
-            timerIPUpdater.Interval = seconds * 1000;
+            try
+            {
+                if (GlobalpUpdaterTimer.Instance.IsRunning)
+                {
+                    GlobalpUpdaterTimer.Instance.UpdateInterval(GetIntervalFromForm() * 1000);
+                }
+                else
+                {
+                    GlobalpUpdaterTimer.Instance.UpdateInterval(GetIntervalFromForm() * 1000);
+                    GlobalpUpdaterTimer.Instance.Stop();
+                }
+            }
+            catch (Exception)
+            {
+                // Do nothing.
+            }
+            
         }
 
         private void bgw_cloudflare_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -700,20 +764,19 @@ namespace Abdal_Security_Group_App
 
         private void bgw_google_DoWork(object sender, DoWorkEventArgs e)
         {
-            timerIPUpdater.Enabled = false;
             switchIPUpdater.Value = false;
-            timerIPUpdater.Stop();
+            GlobalpUpdaterTimer.Instance.Stop();
             // DHCP
             NetworkInterface[] interfaces_f1 = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in interfaces_f1)
             {
                 cmdHandelCommand($"netsh interface ipv4 set dnsservers    \"{adapter.Name}\"  dhcp");
-
             }
 
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." + Environment.NewLine);
+                radRichTextEditorResult.AppendText("دی ان اس سیستم شما بر روی حالت پیشفرض شبکه شما تغییر یافت." +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
@@ -728,12 +791,15 @@ namespace Abdal_Security_Group_App
                 radRichTextEditorResult.ScrollToCaret();
             });
             // Clean Route
-            cmdHandelCommand("for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv4 sh route store^=persistent ^| findstr -v 0.0.0.0/0') do route delete -4 -p %e %f");
-            cmdHandelCommand("for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv6 sh route store^=persistent ^| findstr -v ::/0') do route delete -6 -p %e %f");
+            cmdHandelCommand(
+                "for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv4 sh route store^=persistent ^| findstr -v 0.0.0.0/0') do route delete -4 -p %e %f");
+            cmdHandelCommand(
+                "for /f \"skip=3 tokens=4,6\" %e in ('netsh int ipv6 sh route store^=persistent ^| findstr -v ::/0') do route delete -6 -p %e %f");
 
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("کش روت های سیستم شما حذف شد تا شکن بدون اختلال کار کند" + Environment.NewLine);
+                radRichTextEditorResult.AppendText("کش روت های سیستم شما حذف شد تا شکن بدون اختلال کار کند" +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
@@ -743,12 +809,16 @@ namespace Abdal_Security_Group_App
             NetworkInterface[] interfaces_cf = NetworkInterface.GetAllNetworkInterfaces();
             foreach (NetworkInterface adapter in interfaces_cf)
             {
-                cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=8.8.8.8   index=1");
-                cmdHandelCommand($"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=8.8.4.4   index=2");
+                cmdHandelCommand(
+                    $"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=8.8.8.8   index=1");
+                cmdHandelCommand(
+                    $"netsh interface ipv4 add dnsservers    \"{adapter.Name}\"  address=8.8.4.4   index=2");
             }
+
             radRichTextEditorResult.Invoke((MethodInvoker)delegate
             {
-                radRichTextEditorResult.AppendText("دی ان اس های گوگل روی تمامی کارت شبکه های شما ست شد" + Environment.NewLine);
+                radRichTextEditorResult.AppendText("دی ان اس های گوگل روی تمامی کارت شبکه های شما ست شد" +
+                                                   Environment.NewLine);
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });

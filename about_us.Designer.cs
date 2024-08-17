@@ -79,6 +79,7 @@
             richTextBox_about_us.Size = new Size(311, 105);
             richTextBox_about_us.TabIndex = 2;
             richTextBox_about_us.Text = "";
+            richTextBox_about_us.DoubleClick += richTextBox_about_us_DoubleClick;
             // 
             // radLabel2
             // 

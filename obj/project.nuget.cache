@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "dgSpecHash": "99gqt968I8E=",
+  "dgSpecHash": "Lj9UscQS098=",
   "success": true,
   "projectFilePath": "C:\\Users\\EbraSha\\Documents\\Github\\Abdal Shecan DNS\\Abdal Security Group App.csproj",
   "expectedPackageFiles": [
@@ -15,6 +15,7 @@
     "C:\\Users\\EbraSha\\.nuget\\packages\\microsoft.win32.registry.accesscontrol\\8.0.0\\microsoft.win32.registry.accesscontrol.8.0.0.nupkg.sha512",
     "C:\\Users\\EbraSha\\.nuget\\packages\\microsoft.win32.systemevents\\8.0.0\\microsoft.win32.systemevents.8.0.0.nupkg.sha512",
     "C:\\Users\\EbraSha\\.nuget\\packages\\microsoft.windows.compatibility\\8.0.7\\microsoft.windows.compatibility.8.0.7.nupkg.sha512",
+    "C:\\Users\\EbraSha\\.nuget\\packages\\newtonsoft.json\\13.0.3\\newtonsoft.json.13.0.3.nupkg.sha512",
     "C:\\Users\\EbraSha\\.nuget\\packages\\runtime.linux-arm.runtime.native.system.io.ports\\8.0.0\\runtime.linux-arm.runtime.native.system.io.ports.8.0.0.nupkg.sha512",
     "C:\\Users\\EbraSha\\.nuget\\packages\\runtime.linux-arm64.runtime.native.system.io.ports\\8.0.0\\runtime.linux-arm64.runtime.native.system.io.ports.8.0.0.nupkg.sha512",
     "C:\\Users\\EbraSha\\.nuget\\packages\\runtime.linux-x64.runtime.native.system.io.ports\\8.0.0\\runtime.linux-x64.runtime.native.system.io.ports.8.0.0.nupkg.sha512",

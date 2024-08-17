@@ -58,7 +58,6 @@
             UpdateIpPassword = new Telerik.WinControls.UI.RadTextBoxControl();
             TimeSpanPickerIpU = new Telerik.WinControls.UI.RadTimeSpanPicker();
             radLabel2 = new Telerik.WinControls.UI.RadLabel();
-            timerIPUpdater = new System.Windows.Forms.Timer(components);
             bg_IpUpdatre = new System.ComponentModel.BackgroundWorker();
             btn_set_dhcp = new Telerik.WinControls.UI.RadButton();
             bg_auto_dns = new System.ComponentModel.BackgroundWorker();
@@ -327,11 +326,11 @@
             // radLabel4
             // 
             radLabel4.Font = new Font("Tahoma", 9F);
-            radLabel4.Location = new Point(276, 143);
+            radLabel4.Location = new Point(271, 143);
             radLabel4.Name = "radLabel4";
-            radLabel4.Size = new Size(166, 18);
+            radLabel4.Size = new Size(176, 18);
             radLabel4.TabIndex = 8;
-            radLabel4.Text = "چزخه بروزرسان آی پی بر ثانیه:";
+            radLabel4.Text = "چرخه بروزرسان آی پی بر ث / د :";
             radLabel4.TextAlignment = ContentAlignment.TopRight;
             radLabel4.ThemeName = "VisualStudio2022Dark";
             // 
@@ -352,12 +351,11 @@
             // 
             TimeSpanPickerIpU.BackColor = Color.FromArgb(36, 36, 36);
             TimeSpanPickerIpU.ForeColor = Color.FromArgb(221, 221, 221);
-            TimeSpanPickerIpU.Format = "ss";
+            TimeSpanPickerIpU.Format = "mm:ss";
             TimeSpanPickerIpU.Location = new Point(212, 141);
             TimeSpanPickerIpU.MaxValue = TimeSpan.Parse("60.00:00:00");
             TimeSpanPickerIpU.MinValue = TimeSpan.Parse("00:00:04");
             TimeSpanPickerIpU.Name = "TimeSpanPickerIpU";
-            TimeSpanPickerIpU.ShowSpinButtons = true;
             TimeSpanPickerIpU.Size = new Size(57, 22);
             TimeSpanPickerIpU.TabIndex = 9;
             TimeSpanPickerIpU.TabStop = false;
@@ -376,11 +374,6 @@
             radLabel2.Text = "نوع شکن";
             radLabel2.TextAlignment = ContentAlignment.TopRight;
             radLabel2.ThemeName = "VisualStudio2022Dark";
-            // 
-            // timerIPUpdater
-            // 
-            timerIPUpdater.Interval = 5000;
-            timerIPUpdater.Tick += timerIPUpdater_Tick;
             // 
             // bg_IpUpdatre
             // 
@@ -538,7 +531,6 @@
         private Telerik.WinControls.UI.RadGroupBox radGroupBox1;
         private Telerik.WinControls.UI.RadLabel radLabel2;
         private Telerik.WinControls.UI.RadTimeSpanPicker TimeSpanPickerIpU;
-        private System.Windows.Forms.Timer timerIPUpdater;
         private Telerik.WinControls.UI.RadTextBoxControl UpdateIpPassword;
         private Telerik.WinControls.UI.RadLabel radLabel4;
         private PictureBox pictureBox1;

@@ -37,7 +37,7 @@ namespace Abdal_Security_Group_App
 
         private void btn_exit_Click(object sender, EventArgs e)
         {
-          
+
             this.Close();
 
         }
@@ -45,6 +45,12 @@ namespace Abdal_Security_Group_App
         private void btn_minimize_Click(object sender, EventArgs e)
         {
             this.WindowState = FormWindowState.Minimized;
+        }
+
+        private void richTextBox_about_us_DoubleClick(object sender, EventArgs e)
+        {
+            full_about_us full_about_form = new full_about_us();
+            full_about_form.ShowDialog();
         }
     }
 }

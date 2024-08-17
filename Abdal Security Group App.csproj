@@ -12,6 +12,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>Abdal Shecan DNS</AssemblyName>
     <Copyright>Programmer : Ebrahim Shafiei</Copyright>
+    <AssemblyVersion>1.15</AssemblyVersion>
+    <FileVersion>1.15</FileVersion>
+    <Version>1.15</Version>
   </PropertyGroup>
 
   <ItemGroup>
@@ -46,6 +49,7 @@
   <ItemGroup>
     <PackageReference Include="ChilkatDnCore" Version="9.50.99" />
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="8.0.7" />
+    <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
     <PackageReference Include="System.Runtime.Serialization.Schema" Version="8.0.0" />
     <PackageReference Include="UI.for.WinForms.AllControls.Net70" Version="2023.2.718" />
   </ItemGroup>
