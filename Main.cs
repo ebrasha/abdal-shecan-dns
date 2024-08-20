@@ -640,6 +640,8 @@ namespace Abdal_Security_Group_App
 
         private void bgw_cloudflare_DoWork(object sender, DoWorkEventArgs e)
         {
+            #region CFDns
+
             switchIPUpdater.Value = false;
             GlobalpUpdaterTimer.Instance.Stop();
 
@@ -699,6 +701,8 @@ namespace Abdal_Security_Group_App
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
+
+            #endregion
         }
 
         private void tb_cf_g_dns_Click(object sender, EventArgs e)

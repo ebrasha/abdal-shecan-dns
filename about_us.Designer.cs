@@ -60,6 +60,7 @@
             // 
             // radPictureBox1
             // 
+            radPictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
             radPictureBox1.Image = Properties.Resources.Untitled_3;
             radPictureBox1.Location = new Point(11, 20);
             radPictureBox1.Name = "radPictureBox1";
@@ -115,6 +116,7 @@
             // 
             btn_minimize.BackColor = Color.Transparent;
             btn_minimize.BackgroundImage = Properties.Resources.minus_circle_21x21;
+            btn_minimize.BackgroundImageLayout = ImageLayout.Stretch;
             btn_minimize.Cursor = Cursors.Hand;
             btn_minimize.Location = new Point(447, 12);
             btn_minimize.Name = "btn_minimize";
@@ -127,6 +129,7 @@
             // 
             btn_exit.BackColor = Color.Transparent;
             btn_exit.BackgroundImage = Properties.Resources.x_circle_21x21;
+            btn_exit.BackgroundImageLayout = ImageLayout.Stretch;
             btn_exit.Cursor = Cursors.Hand;
             btn_exit.Location = new Point(420, 12);
             btn_exit.Name = "btn_exit";

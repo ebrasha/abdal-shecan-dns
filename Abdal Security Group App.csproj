@@ -12,9 +12,9 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AssemblyName>Abdal Shecan DNS</AssemblyName>
     <Copyright>Programmer : Ebrahim Shafiei</Copyright>
-    <AssemblyVersion>1.15</AssemblyVersion>
-    <FileVersion>1.15</FileVersion>
-    <Version>1.15</Version>
+    <AssemblyVersion>1.16</AssemblyVersion>
+    <FileVersion>1.16</FileVersion>
+    <Version>1.16</Version>
   </PropertyGroup>
 
   <ItemGroup>
