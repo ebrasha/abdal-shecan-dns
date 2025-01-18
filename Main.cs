@@ -26,8 +26,7 @@ namespace Abdal_Security_Group_App
             Version version = Assembly.GetExecutingAssembly().GetName().Version!;
             Text = abdal_app_name + " " + version.Major + "." + version.Minor;
 
-            // Call Global Chilkat Unlock
-            ChilkatMng.UnlockChilkat();
+
             AntiDupProc.AntiDuplicationProcess();
         }
 
@@ -68,6 +67,7 @@ namespace Abdal_Security_Group_App
                     "no",
                     UpdateIpPassword.Text,
                     "no",
+                    "yes",
                     selectedTimeSpan.ToString()
                 );
                 switchIPUpdater.Value = false;
@@ -101,6 +101,17 @@ namespace Abdal_Security_Group_App
                 GlobalpUpdaterTimer.Instance.Stop();
                 switchIPUpdater.Value = false;
                 TimeSpanPickerIpU.BackColor = System.Drawing.Color.Crimson;
+            }
+
+            // Set Notification
+
+            if (config["audio_notification_status"] == "yes")
+            {
+                AudioNotificationStatus.Value = true;
+            }
+            else
+            {
+                AudioNotificationStatus.Value = false;
             }
 
 
@@ -156,21 +167,35 @@ namespace Abdal_Security_Group_App
 
         private void menuItem_github_Click(object sender, EventArgs e)
         {
-            ab_player.sPlayer("checkbox");
+            if (AudioNotificationStatus.Value)
+            {
+                ab_player.sPlayer("checkbox");
+            }
+
             Process.Start(new ProcessStartInfo("https://github.com/ebrasha/" + abdal_app_name_for_url)
             { UseShellExecute = true });
         }
 
         private void menuItem_gitlab_Click(object sender, EventArgs e)
         {
-            ab_player.sPlayer("checkbox");
+            if (AudioNotificationStatus.Value)
+            {
+                ab_player.sPlayer("checkbox");
+            }
+
+
             Process.Start(new ProcessStartInfo("https://gitlab.com/Prof.Shafiei/" + abdal_app_name_for_url)
             { UseShellExecute = true });
         }
 
         private void menuItem_about_us_Click(object sender, EventArgs e)
         {
-            ab_player.sPlayer("checkbox");
+            if (AudioNotificationStatus.Value)
+            {
+                ab_player.sPlayer("checkbox");
+            }
+
+
             about_us about_form = new Abdal_Security_Group_App.about_us();
             about_form.ShowDialog();
             about_form.TopMost = true;
@@ -178,7 +203,11 @@ namespace Abdal_Security_Group_App
 
         private void Main_FormClosing(object sender, FormClosingEventArgs e)
         {
-            ab_player.sPlayer("checkbox");
+            if (AudioNotificationStatus.Value)
+            {
+                ab_player.sPlayer("checkbox");
+            }
+
             Process.GetCurrentProcess().Kill();
             Environment.Exit(0);
         }
@@ -219,13 +248,22 @@ namespace Abdal_Security_Group_App
 
         private void irDonationBtn_Click(object sender, EventArgs e)
         {
-            ab_player.sPlayer("coin");
+            if (AudioNotificationStatus.Value)
+            {
+                ab_player.sPlayer("coin");
+            }
+
             Process.Start(new ProcessStartInfo("https://alphajet.ir/abdal-donation") { UseShellExecute = true });
         }
 
         private void EnDonationBtn_Click(object sender, EventArgs e)
         {
-            ab_player.sPlayer("coin");
+            if (AudioNotificationStatus.Value)
+            {
+                ab_player.sPlayer("coin");
+            }
+
+
             Process.Start(new ProcessStartInfo("https://ebrasha.com/abdal-donation") { UseShellExecute = true });
         }
 
@@ -245,6 +283,7 @@ namespace Abdal_Security_Group_App
                 (ShecanPro.Value) ? "yes" : "no",
                 UpdateIpPassword.Text,
                 (switchIPUpdater.Value) ? "yes" : "no",
+                (AudioNotificationStatus.Value) ? "yes" : "no",
                 selectedTimeSpan.ToString()
             );
 
@@ -432,7 +471,11 @@ namespace Abdal_Security_Group_App
             desk_alert.CaptionText = "نرم افزار مدیریت شکن تیم ابدال";
             desk_alert.ContentText = message;
             desk_alert.Show();
-            ab_player.sPlayerSync(sound);
+            if (AudioNotificationStatus.Value)
+            {
+                ab_player.sPlayerSync(sound);
+            }
+
         }
 
         private void bg_IpUpdatre_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -456,7 +499,7 @@ namespace Abdal_Security_Group_App
             catch (Exception ex)
             {
 
-              // Do nothing
+                // Do nothing
             }
         }
 
@@ -472,13 +515,17 @@ namespace Abdal_Security_Group_App
             {
                 if (switchIPUpdater.Value)
                 {
-                    ab_player.sPlayerSync("checkbox");
+                    if (AudioNotificationStatus.Value)
+                    {
+                        ab_player.sPlayerSync("checkbox");
+                    }
+
 
                     TimeSpanPickerIpU.BackColor = System.Drawing.Color.FromArgb(36, 36, 36);
 
                     if (ShecanPro.Value == true)
                     {
-                     
+
 
                         if (!GlobalpUpdaterTimer.Instance.IsRunning)
                         {
@@ -490,13 +537,17 @@ namespace Abdal_Security_Group_App
                         GlobalpUpdaterTimer.Instance.Stop();
                     }
 
-                   
+
                 }
                 else
                 {
-                    ab_player.sPlayerSync("checkbox");
+                    if (AudioNotificationStatus.Value)
+                    {
+                        ab_player.sPlayerSync("checkbox");
+                    }
+
                     TimeSpanPickerIpU.BackColor = System.Drawing.Color.Crimson;
-                   
+
                     GlobalpUpdaterTimer.Instance.Stop();
 
                 }
@@ -506,13 +557,14 @@ namespace Abdal_Security_Group_App
                 int seconds = selectedTimeSpan.Seconds;
 
 
-                
+
 
                 ShecanConfig.SaveConfig(
                     PubVar.configFilePath,
                     (ShecanPro.Value) ? "yes" : "no",
                     UpdateIpPassword.Text,
                     (switchIPUpdater.Value) ? "yes" : "no",
+                    (AudioNotificationStatus.Value) ? "yes" : "no",
                     selectedTimeSpan.ToString()
                 );
             }
@@ -528,7 +580,11 @@ namespace Abdal_Security_Group_App
             {
                 if (ShecanPro.Value)
                 {
-                    ab_player.sPlayerSync("checkbox");
+                    if (AudioNotificationStatus.Value)
+                    {
+                        ab_player.sPlayerSync("checkbox");
+                    }
+
                     textUpdaterCodeStatus.Text = "وضعیت کد : نامشخص";
                     textUpdaterCodeStatus.ForeColor = System.Drawing.Color.FromArgb(221, 221, 221);
 
@@ -540,7 +596,11 @@ namespace Abdal_Security_Group_App
                 }
                 else
                 {
-                    ab_player.sPlayerSync("checkbox");
+                    if (AudioNotificationStatus.Value)
+                    {
+                        ab_player.sPlayerSync("checkbox");
+                    }
+
                     textUpdaterCodeStatus.Text = "وضعیت کد : نامشخص";
                     textUpdaterCodeStatus.ForeColor = System.Drawing.Color.FromArgb(221, 221, 221);
 
@@ -563,6 +623,7 @@ namespace Abdal_Security_Group_App
                     (ShecanPro.Value) ? "yes" : "no",
                     UpdateIpPassword.Text,
                     (switchIPUpdater.Value) ? "yes" : "no",
+                    (AudioNotificationStatus.Value) ? "yes" : "no",
                     selectedTimeSpan.ToString()
                 );
             }
@@ -731,7 +792,7 @@ namespace Abdal_Security_Group_App
             {
                 // Do nothing.
             }
-            
+
         }
 
         private void bgw_cloudflare_RunWorkerCompleted(object sender, RunWorkerCompletedEventArgs e)
@@ -849,6 +910,29 @@ namespace Abdal_Security_Group_App
             else
             {
                 ShowDeskAlert("انجام شد", stop_op_status ? "cancel" : "google-dns");
+            }
+        }
+
+        private void AudioNotificationStatus_ValueChanged(object sender, EventArgs e)
+        {
+            try
+            {
+                TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
+                int seconds = selectedTimeSpan.Seconds;
+
+                ShecanConfig.SaveConfig(
+                   PubVar.configFilePath,
+                   (ShecanPro.Value) ? "yes" : "no",
+                   UpdateIpPassword.Text,
+                   (switchIPUpdater.Value) ? "yes" : "no",
+                   (AudioNotificationStatus.Value) ? "yes" : "no",
+                   selectedTimeSpan.ToString()
+               );
+            }
+            catch (Exception)
+            {
+
+               
             }
         }
     }

@@ -2,59 +2,6 @@
   "version": 3,
   "targets": {
     "net7.0-windows7.0": {
-      "ChilkatDnCore/9.50.99": {
-        "type": "package",
-        "dependencies": {
-          "ChilkatNativeLib": "9.50.99"
-        },
-        "compile": {
-          "lib/net6.0/ChilkatDnCore.dll": {}
-        },
-        "runtime": {
-          "lib/net6.0/ChilkatDnCore.dll": {}
-        }
-      },
-      "ChilkatNativeLib/9.50.99": {
-        "type": "package",
-        "runtimeTargets": {
-          "runtimes/linux-arm/native/libchilkatDnCore-9_5_0.so": {
-            "assetType": "native",
-            "rid": "linux-arm"
-          },
-          "runtimes/linux-arm64/native/libchilkatDnCore-9_5_0.so": {
-            "assetType": "native",
-            "rid": "linux-arm64"
-          },
-          "runtimes/linux-musl-x64/native/libchilkatDnCore-9_5_0.so": {
-            "assetType": "native",
-            "rid": "linux-musl-x64"
-          },
-          "runtimes/linux-x64/native/libchilkatDnCore-9_5_0.so": {
-            "assetType": "native",
-            "rid": "linux-x64"
-          },
-          "runtimes/osx-arm64/native/libchilkatDnCore-9_5_0.dylib": {
-            "assetType": "native",
-            "rid": "osx-arm64"
-          },
-          "runtimes/osx-x64/native/libchilkatDnCore-9_5_0.dylib": {
-            "assetType": "native",
-            "rid": "osx-x64"
-          },
-          "runtimes/win-arm64/native/chilkatDnCore-9_5_0.dll": {
-            "assetType": "native",
-            "rid": "win-arm64"
-          },
-          "runtimes/win-x64/native/chilkatDnCore-9_5_0.dll": {
-            "assetType": "native",
-            "rid": "win-x64"
-          },
-          "runtimes/win-x86/native/chilkatDnCore-9_5_0.dll": {
-            "assetType": "native",
-            "rid": "win-x86"
-          }
-        }
-      },
       "Microsoft.Bcl.AsyncInterfaces/5.0.0": {
         "type": "package",
         "compile": {
@@ -1523,24 +1470,6 @@
       }
     },
     "net7.0-windows7.0/win-x86": {
-      "ChilkatDnCore/9.50.99": {
-        "type": "package",
-        "dependencies": {
-          "ChilkatNativeLib": "9.50.99"
-        },
-        "compile": {
-          "lib/net6.0/ChilkatDnCore.dll": {}
-        },
-        "runtime": {
-          "lib/net6.0/ChilkatDnCore.dll": {}
-        }
-      },
-      "ChilkatNativeLib/9.50.99": {
-        "type": "package",
-        "native": {
-          "runtimes/win-x86/native/chilkatDnCore-9_5_0.dll": {}
-        }
-      },
       "Microsoft.Bcl.AsyncInterfaces/5.0.0": {
         "type": "package",
         "compile": {
@@ -2778,44 +2707,6 @@
     }
   },
   "libraries": {
-    "ChilkatDnCore/9.50.99": {
-      "sha512": "r0TQCoRuDDTfVf/ftwGFjXaTlblhxtDoYdZ3e9tF0yaoLhQMNSf2EJkEyukQC1LOtZCpO2WLSoDj4EXTz7tXlA==",
-      "type": "package",
-      "path": "chilkatdncore/9.50.99",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "ChilkatDnCore.md",
-        "chilkat.png",
-        "chilkatdncore.9.50.99.nupkg.sha512",
-        "chilkatdncore.nuspec",
-        "lib/net6.0/ChilkatDnCore.dll",
-        "license.txt"
-      ]
-    },
-    "ChilkatNativeLib/9.50.99": {
-      "sha512": "lLpgoGyyo9NveWdX6fDb9Kl1mHSTD9I2/dUPWTv0J8Udvfjy4ZYNIoaHors6Pixa7TjDsNi+sNN/S54p+PkIrg==",
-      "type": "package",
-      "path": "chilkatnativelib/9.50.99",
-      "files": [
-        ".nupkg.metadata",
-        ".signature.p7s",
-        "README.md",
-        "chilkat.png",
-        "chilkatnativelib.9.50.99.nupkg.sha512",
-        "chilkatnativelib.nuspec",
-        "license.txt",
-        "runtimes/linux-arm/native/libchilkatDnCore-9_5_0.so",
-        "runtimes/linux-arm64/native/libchilkatDnCore-9_5_0.so",
-        "runtimes/linux-musl-x64/native/libchilkatDnCore-9_5_0.so",
-        "runtimes/linux-x64/native/libchilkatDnCore-9_5_0.so",
-        "runtimes/osx-arm64/native/libchilkatDnCore-9_5_0.dylib",
-        "runtimes/osx-x64/native/libchilkatDnCore-9_5_0.dylib",
-        "runtimes/win-arm64/native/chilkatDnCore-9_5_0.dll",
-        "runtimes/win-x64/native/chilkatDnCore-9_5_0.dll",
-        "runtimes/win-x86/native/chilkatDnCore-9_5_0.dll"
-      ]
-    },
     "Microsoft.Bcl.AsyncInterfaces/5.0.0": {
       "sha512": "W8DPQjkMScOMTtJbPwmPyj9c3zYSFGawDW3jwlBOOsnY+EzZFLgNQ/UMkK35JmkNOVPdCyPr2Tw7Vv9N+KA3ZQ==",
       "type": "package",
@@ -5031,7 +4922,6 @@
   },
   "projectFileDependencyGroups": {
     "net7.0-windows7.0": [
-      "ChilkatDnCore >= 9.50.99",
       "Microsoft.NET.ILLink.Analyzers >= 7.0.100-1.23401.1",
       "Microsoft.NET.ILLink.Tasks >= 7.0.100-1.23401.1",
       "Microsoft.Windows.Compatibility >= 8.0.7",
@@ -5042,10 +4932,11 @@
   },
   "packageFolders": {
     "C:\\Users\\EbraSha\\.nuget\\packages\\": {},
+    "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages": {},
     "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages": {}
   },
   "project": {
-    "version": "1.16.0",
+    "version": "1.18.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\EbraSha\\Documents\\Github\\Abdal Shecan DNS\\Abdal Security Group App.csproj",
       "projectName": "Abdal Shecan DNS",
@@ -5054,10 +4945,12 @@
       "outputPath": "C:\\Users\\EbraSha\\Documents\\Github\\Abdal Shecan DNS\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
+        "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages",
         "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages"
       ],
       "configFilePaths": [
         "C:\\Users\\EbraSha\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.FallbackLocation.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Telerik UI for WPF.config"
       ],
@@ -5090,10 +4983,6 @@
       "net7.0-windows7.0": {
         "targetAlias": "net7.0-windows",
         "dependencies": {
-          "ChilkatDnCore": {
-            "target": "Package",
-            "version": "[9.50.99, )"
-          },
           "Microsoft.NET.ILLink.Analyzers": {
             "suppressParent": "All",
             "target": "Package",

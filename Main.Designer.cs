@@ -47,13 +47,13 @@
             ShecanPro = new Telerik.WinControls.UI.RadToggleSwitch();
             radRichTextEditorResult = new RichTextBox();
             radGroupBox1 = new Telerik.WinControls.UI.RadGroupBox();
+            AudioNotificationStatus = new Telerik.WinControls.UI.RadToggleSwitch();
             switchIPUpdater = new Telerik.WinControls.UI.RadToggleSwitch();
             radLabel6 = new Telerik.WinControls.UI.RadLabel();
             radLabel5 = new Telerik.WinControls.UI.RadLabel();
             radSeparator1 = new Telerik.WinControls.UI.RadSeparator();
             textUpdaterCodeStatus = new Telerik.WinControls.UI.RadLabel();
             radLabel3 = new Telerik.WinControls.UI.RadLabel();
-            pictureBox1 = new PictureBox();
             radLabel4 = new Telerik.WinControls.UI.RadLabel();
             UpdateIpPassword = new Telerik.WinControls.UI.RadTextBoxControl();
             TimeSpanPickerIpU = new Telerik.WinControls.UI.RadTimeSpanPicker();
@@ -75,13 +75,13 @@
             ((System.ComponentModel.ISupportInitialize)ShecanPro).BeginInit();
             ((System.ComponentModel.ISupportInitialize)radGroupBox1).BeginInit();
             radGroupBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)AudioNotificationStatus).BeginInit();
             ((System.ComponentModel.ISupportInitialize)switchIPUpdater).BeginInit();
             ((System.ComponentModel.ISupportInitialize)radLabel6).BeginInit();
             ((System.ComponentModel.ISupportInitialize)radLabel5).BeginInit();
             ((System.ComponentModel.ISupportInitialize)radSeparator1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)textUpdaterCodeStatus).BeginInit();
             ((System.ComponentModel.ISupportInitialize)radLabel3).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).BeginInit();
             ((System.ComponentModel.ISupportInitialize)radLabel4).BeginInit();
             ((System.ComponentModel.ISupportInitialize)UpdateIpPassword).BeginInit();
             ((System.ComponentModel.ISupportInitialize)TimeSpanPickerIpU).BeginInit();
@@ -226,13 +226,13 @@
             // radGroupBox1
             // 
             radGroupBox1.AccessibleRole = AccessibleRole.Grouping;
+            radGroupBox1.Controls.Add(AudioNotificationStatus);
             radGroupBox1.Controls.Add(switchIPUpdater);
             radGroupBox1.Controls.Add(radLabel6);
             radGroupBox1.Controls.Add(radLabel5);
             radGroupBox1.Controls.Add(radSeparator1);
             radGroupBox1.Controls.Add(textUpdaterCodeStatus);
             radGroupBox1.Controls.Add(radLabel3);
-            radGroupBox1.Controls.Add(pictureBox1);
             radGroupBox1.Controls.Add(radLabel4);
             radGroupBox1.Controls.Add(UpdateIpPassword);
             radGroupBox1.Controls.Add(radLabel1);
@@ -249,6 +249,18 @@
             radGroupBox1.TabIndex = 8;
             radGroupBox1.Text = "تنظیمات شکن";
             radGroupBox1.ThemeName = "VisualStudio2022Dark";
+            // 
+            // AudioNotificationStatus
+            // 
+            AudioNotificationStatus.Location = new Point(7, 55);
+            AudioNotificationStatus.Name = "AudioNotificationStatus";
+            AudioNotificationStatus.OffText = "اعلان صوتی خاموش";
+            AudioNotificationStatus.OnText = "اعلان صوتی روشن";
+            AudioNotificationStatus.Size = new Size(130, 22);
+            AudioNotificationStatus.TabIndex = 11;
+            AudioNotificationStatus.ThemeName = "VisualStudio2022Dark";
+            AudioNotificationStatus.ThumbTickness = 16;
+            AudioNotificationStatus.ValueChanged += AudioNotificationStatus_ValueChanged;
             // 
             // switchIPUpdater
             // 
@@ -314,16 +326,6 @@
             radLabel3.Text = "کد  بروزرسان آی پی:";
             radLabel3.TextAlignment = ContentAlignment.TopRight;
             radLabel3.ThemeName = "VisualStudio2022Dark";
-            // 
-            // pictureBox1
-            // 
-            pictureBox1.BackgroundImageLayout = ImageLayout.Stretch;
-            pictureBox1.Image = Properties.Resources.gray;
-            pictureBox1.Location = new Point(8, 20);
-            pictureBox1.Name = "pictureBox1";
-            pictureBox1.Size = new Size(133, 58);
-            pictureBox1.TabIndex = 11;
-            pictureBox1.TabStop = false;
             // 
             // radLabel4
             // 
@@ -491,13 +493,13 @@
             ((System.ComponentModel.ISupportInitialize)radGroupBox1).EndInit();
             radGroupBox1.ResumeLayout(false);
             radGroupBox1.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)AudioNotificationStatus).EndInit();
             ((System.ComponentModel.ISupportInitialize)switchIPUpdater).EndInit();
             ((System.ComponentModel.ISupportInitialize)radLabel6).EndInit();
             ((System.ComponentModel.ISupportInitialize)radLabel5).EndInit();
             ((System.ComponentModel.ISupportInitialize)radSeparator1).EndInit();
             ((System.ComponentModel.ISupportInitialize)textUpdaterCodeStatus).EndInit();
             ((System.ComponentModel.ISupportInitialize)radLabel3).EndInit();
-            ((System.ComponentModel.ISupportInitialize)pictureBox1).EndInit();
             ((System.ComponentModel.ISupportInitialize)radLabel4).EndInit();
             ((System.ComponentModel.ISupportInitialize)UpdateIpPassword).EndInit();
             ((System.ComponentModel.ISupportInitialize)TimeSpanPickerIpU).EndInit();
@@ -535,7 +537,6 @@
         private Telerik.WinControls.UI.RadTimeSpanPicker TimeSpanPickerIpU;
         private Telerik.WinControls.UI.RadTextBoxControl UpdateIpPassword;
         private Telerik.WinControls.UI.RadLabel radLabel4;
-        private PictureBox pictureBox1;
         private System.ComponentModel.BackgroundWorker bg_IpUpdatre;
         private Telerik.WinControls.UI.RadLabel radLabel3;
         private Telerik.WinControls.UI.RadLabel textUpdaterCodeStatus;
@@ -550,5 +551,6 @@
         private System.ComponentModel.BackgroundWorker bgw_cloudflare;
         private Telerik.WinControls.UI.RadButton radButton1;
         private System.ComponentModel.BackgroundWorker bgw_google;
+        private Telerik.WinControls.UI.RadToggleSwitch AudioNotificationStatus;
     }
 }

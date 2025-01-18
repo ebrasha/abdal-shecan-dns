@@ -10,7 +10,7 @@ namespace Abdal_Security_Group_App.Core
     internal class ShecanConfig
     {
         // Static method to save the configuration data
-        public static void SaveConfig(string filePath, string shecanPro, string shecanIpUpdaterCode, string shekanIpUpdaterStatus, string shecanIpUpdaterTimeValue)
+        public static void SaveConfig(string filePath, string shecanPro, string shecanIpUpdaterCode, string shekanIpUpdaterStatus,string AudioNotificationStatus, string shecanIpUpdaterTimeValue)
         {
             // Check if the file exists
             if (!File.Exists(filePath))
@@ -21,6 +21,7 @@ namespace Abdal_Security_Group_App.Core
                         new XElement("shecan_pro", shecanPro),
                         new XElement("shecan_ip_updater_code", shecanIpUpdaterCode),
                         new XElement("shekan_ip_updater_status", shekanIpUpdaterStatus),
+                        new XElement("audio_notification_status", AudioNotificationStatus),
                         new XElement("shecan_ip_updater_time_value", shecanIpUpdaterTimeValue)
                     )
                 );
@@ -35,6 +36,7 @@ namespace Abdal_Security_Group_App.Core
                 root.Element("shecan_pro").Value = shecanPro;
                 root.Element("shecan_ip_updater_code").Value = shecanIpUpdaterCode;
                 root.Element("shekan_ip_updater_status").Value = shekanIpUpdaterStatus;
+                root.Element("audio_notification_status").Value = AudioNotificationStatus;
                 root.Element("shecan_ip_updater_time_value").Value = shecanIpUpdaterTimeValue;
 
                 existingDoc.Save(filePath);
@@ -52,12 +54,45 @@ namespace Abdal_Security_Group_App.Core
             // Check if the file exists
             if (File.Exists(filePath))
             {
+
+                // Define default values
+                var defaultValues = new Dictionary<string, string>
+                        {
+                            {"shecan_pro", "no"},
+                            {"shecan_ip_updater_code", ""},
+                            {"shekan_ip_updater_status", "no"},
+                            {"audio_notification_status", "yes"},
+                            {"shecan_ip_updater_time_value", "10"}
+                        };
+
                 XDocument doc = XDocument.Load(filePath);
                 XElement root = doc.Element("Configuration");
+
+                if (root == null)
+                {
+                    root = new XElement("Configuration");
+                    doc.Add(root);
+                }
+
+                foreach (var key in defaultValues.Keys)
+                {
+                    var element = root.Element(key);
+                    if (element == null)
+                    {
+                        // Add missing element with default value
+                        root.Add(new XElement(key, defaultValues[key]));
+                    }
+
+                    configData[key] = element?.Value ?? defaultValues[key];
+                }
+
+                // Save changes if any elements were added
+                doc.Save(filePath);
 
                 configData["shecan_pro"] = root.Element("shecan_pro")?.Value ?? string.Empty;
                 configData["shecan_ip_updater_code"] = root.Element("shecan_ip_updater_code")?.Value ?? string.Empty;
                 configData["shekan_ip_updater_status"] = root.Element("shekan_ip_updater_status")?.Value ?? string.Empty;
+                configData["audio_notification_status"] = root.Element("audio_notification_status")?.Value ?? string.Empty;
                 configData["shecan_ip_updater_time_value"] = root.Element("shecan_ip_updater_time_value")?.Value ?? string.Empty;
 
             }
@@ -67,6 +102,7 @@ namespace Abdal_Security_Group_App.Core
                     PubVar.configFilePath,
                     "no",
                     "",
+                    "no",
                     "no",
                     "10"
                     );

@@ -1,11 +1,9 @@
 {
   "version": 2,
-  "dgSpecHash": "4UZdJEWVhto=",
+  "dgSpecHash": "XB435hOU560=",
   "success": true,
   "projectFilePath": "C:\\Users\\EbraSha\\Documents\\Github\\Abdal Shecan DNS\\Abdal Security Group App.csproj",
   "expectedPackageFiles": [
-    "C:\\Users\\EbraSha\\.nuget\\packages\\chilkatdncore\\9.50.99\\chilkatdncore.9.50.99.nupkg.sha512",
-    "C:\\Users\\EbraSha\\.nuget\\packages\\chilkatnativelib\\9.50.99\\chilkatnativelib.9.50.99.nupkg.sha512",
     "C:\\Users\\EbraSha\\.nuget\\packages\\microsoft.bcl.asyncinterfaces\\5.0.0\\microsoft.bcl.asyncinterfaces.5.0.0.nupkg.sha512",
     "C:\\Users\\EbraSha\\.nuget\\packages\\microsoft.extensions.objectpool\\5.0.10\\microsoft.extensions.objectpool.5.0.10.nupkg.sha512",
     "C:\\Users\\EbraSha\\.nuget\\packages\\microsoft.net.illink.analyzers\\7.0.100-1.23401.1\\microsoft.net.illink.analyzers.7.0.100-1.23401.1.nupkg.sha512",
