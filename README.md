@@ -3,7 +3,7 @@
 
 ## 👀 پیش نمایش
 
-<p align="center"><img src="screenshot.png?raw=true"></p>
+<p align="center"><img src="screenshot-new.png?raw=true"></p>
 
 
 ## 🎥 آموزش کامل استفاده از نرم افزار 
