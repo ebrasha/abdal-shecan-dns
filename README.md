@@ -6,6 +6,14 @@
 <p align="center"><img src="screenshot.png?raw=true"></p>
 
 
+## 🎥 آموزش کامل استفاده از نرم افزار 
+
+برای دانلود فایل آموزش کامل استفاده از نرم‌افزار Abdal Shecan DNS، روی لینک زیر کلیک کنید:
+
+📥 [دانلود ویدئو آموزشی](https://github.com/ebrasha/abdal-shecan-dns/raw/main/help/Complete-Guide-to-Using-Abdal-Shecan-DNS.mp4)
+
+
+
 
 
  ## 💎 هدف اصلی
