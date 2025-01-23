@@ -7,7 +7,7 @@
   "targets": {
     ".NETCoreApp,Version=v7.0": {},
     ".NETCoreApp,Version=v7.0/win-x64": {
-      "Abdal Shecan DNS/1.18": {
+      "Abdal Shecan DNS/1.20": {
         "dependencies": {
           "Microsoft.NET.ILLink.Analyzers": "7.0.100-1.23401.1",
           "Microsoft.NET.ILLink.Tasks": "7.0.100-1.23401.1",
@@ -1715,7 +1715,7 @@
     }
   },
   "libraries": {
-    "Abdal Shecan DNS/1.18": {
+    "Abdal Shecan DNS/1.20": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

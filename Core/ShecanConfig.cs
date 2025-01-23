@@ -10,7 +10,15 @@ namespace Abdal_Security_Group_App.Core
     internal class ShecanConfig
     {
         // Static method to save the configuration data
-        public static void SaveConfig(string filePath, string shecanPro, string shecanIpUpdaterCode, string shekanIpUpdaterStatus,string AudioNotificationStatus, string shecanIpUpdaterTimeValue)
+        public static void SaveConfig(
+            string filePath,
+            string shecanPro,
+            string shecanIpUpdaterCode,
+            string shekanIpUpdaterStatus,
+            string AudioNotificationStatus,
+            string shecanIpUpdaterTimeValue,
+            string dnsType
+            )
         {
             // Check if the file exists
             if (!File.Exists(filePath))
@@ -22,7 +30,8 @@ namespace Abdal_Security_Group_App.Core
                         new XElement("shecan_ip_updater_code", shecanIpUpdaterCode),
                         new XElement("shekan_ip_updater_status", shekanIpUpdaterStatus),
                         new XElement("audio_notification_status", AudioNotificationStatus),
-                        new XElement("shecan_ip_updater_time_value", shecanIpUpdaterTimeValue)
+                        new XElement("shecan_ip_updater_time_value", shecanIpUpdaterTimeValue),
+                        new XElement("dns_type", dnsType)
                     )
                 );
                 newDoc.Save(filePath);
@@ -38,6 +47,7 @@ namespace Abdal_Security_Group_App.Core
                 root.Element("shekan_ip_updater_status").Value = shekanIpUpdaterStatus;
                 root.Element("audio_notification_status").Value = AudioNotificationStatus;
                 root.Element("shecan_ip_updater_time_value").Value = shecanIpUpdaterTimeValue;
+                root.Element("dns_type").Value = dnsType;
 
                 existingDoc.Save(filePath);
             }
@@ -62,7 +72,9 @@ namespace Abdal_Security_Group_App.Core
                             {"shecan_ip_updater_code", ""},
                             {"shekan_ip_updater_status", "no"},
                             {"audio_notification_status", "yes"},
-                            {"shecan_ip_updater_time_value", "10"}
+                            {"shecan_ip_updater_time_value", "10"},
+                             {"dns_type", "def"}
+
                         };
 
                 XDocument doc = XDocument.Load(filePath);
@@ -94,6 +106,7 @@ namespace Abdal_Security_Group_App.Core
                 configData["shekan_ip_updater_status"] = root.Element("shekan_ip_updater_status")?.Value ?? string.Empty;
                 configData["audio_notification_status"] = root.Element("audio_notification_status")?.Value ?? string.Empty;
                 configData["shecan_ip_updater_time_value"] = root.Element("shecan_ip_updater_time_value")?.Value ?? string.Empty;
+                configData["dns_type"] = root.Element("dns_type")?.Value ?? string.Empty;
 
             }
             else
@@ -104,7 +117,8 @@ namespace Abdal_Security_Group_App.Core
                     "",
                     "no",
                     "no",
-                    "10"
+                    "10",
+                    "def"
                     );
             }
 

@@ -68,7 +68,8 @@ namespace Abdal_Security_Group_App
                     UpdateIpPassword.Text,
                     "no",
                     "yes",
-                    selectedTimeSpan.ToString()
+                    selectedTimeSpan.ToString(),
+                    "def"
                 );
                 switchIPUpdater.Value = false;
                 ShecanPro.Value = false;
@@ -124,6 +125,35 @@ namespace Abdal_Security_Group_App
                 nicList.Items.Add(adapter.Name);
             }
             await UpdateChecker.CheckForUpdateAsync();
+
+            if (config["dns_type"] == "shekan")
+            {
+                if (!bg_worker.IsBusy)
+                {
+                    bg_worker.RunWorkerAsync();
+                }
+            }
+            else if (config["dns_type"] == "cloudflare")
+            {
+                if (bgw_cloudflare.IsBusy != true)
+                {
+                    bgw_cloudflare.RunWorkerAsync();
+                }
+            }
+            else if (config["dns_type"] == "google")
+            {
+                if (bgw_google.IsBusy != true)
+                {
+                    bgw_google.RunWorkerAsync();
+                }
+            }
+            else
+            {
+                if (bg_auto_dns.IsBusy != true)
+                {
+                    bg_auto_dns.RunWorkerAsync();
+                }
+            }
         }
 
         private void cmdHandelCommand(string userCommand)
@@ -284,7 +314,8 @@ namespace Abdal_Security_Group_App
                 UpdateIpPassword.Text,
                 (switchIPUpdater.Value) ? "yes" : "no",
                 (AudioNotificationStatus.Value) ? "yes" : "no",
-                selectedTimeSpan.ToString()
+                selectedTimeSpan.ToString(),
+                "shekan"
             );
 
 
@@ -470,7 +501,14 @@ namespace Abdal_Security_Group_App
         {
             desk_alert.CaptionText = "نرم افزار مدیریت شکن تیم ابدال";
             desk_alert.ContentText = message;
+            desk_alert.ThemeName = "VisualStudio2022Dark";
+            desk_alert.RightToLeft = RightToLeft.Yes;
+            desk_alert.Opacity = 0.8F;
+            desk_alert.FadeAnimationSpeed = 8;
+            desk_alert.AutoCloseDelay = 5;
             desk_alert.Show();
+          
+
             if (AudioNotificationStatus.Value)
             {
                 ab_player.sPlayerSync(sound);
@@ -557,7 +595,7 @@ namespace Abdal_Security_Group_App
                 int seconds = selectedTimeSpan.Seconds;
 
 
-
+                Dictionary<string, string> config = ShecanConfig.RetrieveConfig(PubVar.configFilePath);
 
                 ShecanConfig.SaveConfig(
                     PubVar.configFilePath,
@@ -565,7 +603,8 @@ namespace Abdal_Security_Group_App
                     UpdateIpPassword.Text,
                     (switchIPUpdater.Value) ? "yes" : "no",
                     (AudioNotificationStatus.Value) ? "yes" : "no",
-                    selectedTimeSpan.ToString()
+                    selectedTimeSpan.ToString(),
+                    config["dns_type"]
                 );
             }
             catch (Exception)
@@ -617,6 +656,7 @@ namespace Abdal_Security_Group_App
                 GlobalpUpdaterTimer.Instance.UpdateInterval(seconds * 1000);
                 GlobalpUpdaterTimer.Instance.Start();
 
+                Dictionary<string, string> config = ShecanConfig.RetrieveConfig(PubVar.configFilePath);
 
                 ShecanConfig.SaveConfig(
                     PubVar.configFilePath,
@@ -624,7 +664,8 @@ namespace Abdal_Security_Group_App
                     UpdateIpPassword.Text,
                     (switchIPUpdater.Value) ? "yes" : "no",
                     (AudioNotificationStatus.Value) ? "yes" : "no",
-                    selectedTimeSpan.ToString()
+                    selectedTimeSpan.ToString(),
+                    config["dns_type"]
                 );
             }
             catch (Exception)
@@ -689,6 +730,21 @@ namespace Abdal_Security_Group_App
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
+
+            TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
+            int seconds = selectedTimeSpan.Seconds;
+
+            Dictionary<string, string> config = ShecanConfig.RetrieveConfig(PubVar.configFilePath);
+
+            ShecanConfig.SaveConfig(
+                PubVar.configFilePath,
+                (ShecanPro.Value) ? "yes" : "no",
+                UpdateIpPassword.Text,
+                (switchIPUpdater.Value) ? "yes" : "no",
+                (AudioNotificationStatus.Value) ? "yes" : "no",
+                selectedTimeSpan.ToString(),
+                "def"
+            );
         }
 
         private void btn_set_dhcp_Click(object sender, EventArgs e)
@@ -701,6 +757,7 @@ namespace Abdal_Security_Group_App
 
         private void bgw_cloudflare_DoWork(object sender, DoWorkEventArgs e)
         {
+
             #region CFDns
 
             switchIPUpdater.Value = false;
@@ -764,6 +821,19 @@ namespace Abdal_Security_Group_App
             });
 
             #endregion
+
+            TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
+            int seconds = selectedTimeSpan.Seconds;
+
+            ShecanConfig.SaveConfig(
+                PubVar.configFilePath,
+                (ShecanPro.Value) ? "yes" : "no",
+                UpdateIpPassword.Text,
+                (switchIPUpdater.Value) ? "yes" : "no",
+                (AudioNotificationStatus.Value) ? "yes" : "no",
+                selectedTimeSpan.ToString(),
+                "cloudflare"
+            );
         }
 
         private void tb_cf_g_dns_Click(object sender, EventArgs e)
@@ -887,6 +957,20 @@ namespace Abdal_Security_Group_App
                 radRichTextEditorResult.SelectionStart = radRichTextEditorResult.Text.Length;
                 radRichTextEditorResult.ScrollToCaret();
             });
+
+
+            TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
+            int seconds = selectedTimeSpan.Seconds;
+            
+            ShecanConfig.SaveConfig(
+                PubVar.configFilePath,
+                (ShecanPro.Value) ? "yes" : "no",
+                UpdateIpPassword.Text,
+                (switchIPUpdater.Value) ? "yes" : "no",
+                (AudioNotificationStatus.Value) ? "yes" : "no",
+                selectedTimeSpan.ToString(),
+                 "google"
+            );
         }
 
         private void radButton1_Click(object sender, EventArgs e)
@@ -920,14 +1004,17 @@ namespace Abdal_Security_Group_App
                 TimeSpan selectedTimeSpan = (TimeSpan)TimeSpanPickerIpU.Value;
                 int seconds = selectedTimeSpan.Seconds;
 
+                Dictionary<string, string> config = ShecanConfig.RetrieveConfig(PubVar.configFilePath);
+
                 ShecanConfig.SaveConfig(
-                   PubVar.configFilePath,
-                   (ShecanPro.Value) ? "yes" : "no",
-                   UpdateIpPassword.Text,
-                   (switchIPUpdater.Value) ? "yes" : "no",
-                   (AudioNotificationStatus.Value) ? "yes" : "no",
-                   selectedTimeSpan.ToString()
-               );
+                    PubVar.configFilePath,
+                    (ShecanPro.Value) ? "yes" : "no",
+                    UpdateIpPassword.Text,
+                    (switchIPUpdater.Value) ? "yes" : "no",
+                    (AudioNotificationStatus.Value) ? "yes" : "no",
+                    selectedTimeSpan.ToString(),
+                    config["dns_type"]
+                );
             }
             catch (Exception)
             {

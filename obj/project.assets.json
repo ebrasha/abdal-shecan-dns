@@ -4936,7 +4936,7 @@
     "C:\\Program Files (x86)\\Progress\\ToolboxNuGetPackages": {}
   },
   "project": {
-    "version": "1.18.0",
+    "version": "1.20.0",
     "restore": {
       "projectUniqueName": "C:\\Users\\EbraSha\\Documents\\Github\\Abdal Shecan DNS\\Abdal Security Group App.csproj",
       "projectName": "Abdal Shecan DNS",
@@ -5053,5 +5053,13 @@
         "#import": []
       }
     }
-  }
+  },
+  "logs": [
+    {
+      "code": "NU1900",
+      "level": "Warning",
+      "warningLevel": 1,
+      "message": "Error occurred while getting package vulnerability data: Unable to load the service index for source https://api.nuget.org/v3/index.json."
+    }
+  ]
 }
